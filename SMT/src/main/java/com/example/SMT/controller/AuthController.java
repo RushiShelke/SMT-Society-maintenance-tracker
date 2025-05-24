@@ -12,6 +12,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
+
+
 public class AuthController {
 
     @Autowired
@@ -24,6 +26,15 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User newUser) {
         Optional<User> existingUser = userRepository.findByEmail(newUser.getEmail());
+        Optional<User> existingNumber = userRepository.findByphoneNumber(newUser.getPhoneNumber());
+        Optional<User> existingsociety = userRepository.findBysocietyregno(newUser.getSocietyregno());
+
+        if (existingNumber.isPresent()){
+            return ResponseEntity.status(400).body("Phone Number Already Exists");
+        }
+        if (existingsociety.isPresent()){
+            return ResponseEntity.status(400).body("Society Registration Number Already Exists");
+        }
 
         if (existingUser.isPresent()) {
             return ResponseEntity.status(400).body("Email already exists");
